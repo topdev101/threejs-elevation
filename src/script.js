@@ -6,7 +6,14 @@ let width = window.innerWidth;
 let height = window.innerHeight;
 
 // camera
-const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+const camera = new THREE.OrthographicCamera(
+  width / -60,
+  width / 60,
+  height / 60,
+  height / -60,
+  0.1,
+  1000
+);
 camera.position.set(3, 6, 20);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -15,28 +22,19 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
 
-// const controls = new THREE.OrbitControls(camera, renderer.domElement);
-// controls.update();
-
-// Lighting
-// const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-// scene.add(ambientLight);
-// const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-// scene.add(directionalLight);
-
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
 scene.add(ambientLight);
 const light = new THREE.DirectionalLight();
 light.position.set(-15, 10, 10);
 light.castShadow = true;
-light.shadow.mapSize.width = 2048;
-light.shadow.mapSize.height = 2048;
+light.shadow.mapSize.width = 4096;
+light.shadow.mapSize.height = 4096;
 light.shadow.camera.near = 0.5;
 light.shadow.camera.far = 1000;
-// light.shadow.camera.left = -50;
-light.shadow.camera.right = 50;
-light.shadow.camera.top = 50;
-light.shadow.camera.bottom = -50;
+light.shadow.camera.right = width / 20;
+light.shadow.camera.left = width / -20;
+light.shadow.camera.top = height / 20;
+light.shadow.camera.bottom = height / -20;
 scene.add(light);
 
 // Load GLTF model
@@ -67,7 +65,10 @@ window.addEventListener("resize", function () {
   const width = window.innerWidth;
   const height = window.innerHeight;
   renderer.setSize(width, height);
-  camera.aspect = width / height;
+  camera.left = width / -50;
+  camera.right = width / 50;
+  camera.top = height / 50;
+  camera.bottom = height / -50;
   camera.updateProjectionMatrix();
 });
 
